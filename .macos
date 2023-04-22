@@ -9,8 +9,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # Disable the sound effects on boot
 nvram SystemAudioVolume=" "
 
-#### Should I enable or disable Application Firewall ####
-# Enable
+# Enable Firewall
 /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 # to add apps to your firewall use the below command: #
 # /usr/libexec/ApplicationFirewall/socketfilterfw --add /path/to/file #
@@ -38,6 +37,9 @@ mdutil -i off
 # Disable bluetooth
 defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -int 0 && \
 killall -HUP bluetoothd
+
+# Disable Wi-Fi
+networksetup -setairportpower airport off
 
 # Save to disk (not to iCloud) by default
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
