@@ -69,9 +69,7 @@ defaults write com.apple.NetworkBrowser DisableAirDrop -bool true
 defaults write com.apple.dock minimize-to-application -bool true
 
 
-
-
-# Safari
+### Safari Setting ###
 
 # Privacy: don’t send search queries to Apple
 defaults write com.apple.Safari UniversalSearchEnabled -bool false
