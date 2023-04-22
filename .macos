@@ -9,8 +9,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # Disable the sound effects on boot
 nvram SystemAudioVolume=" "
 
-#### Should I enable or disable Application Firewall ####
-# Enable
+# Enable Firewall
 /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 # to add apps to your firewall use the below command: #
 # /usr/libexec/ApplicationFirewall/socketfilterfw --add /path/to/file #
@@ -39,6 +38,10 @@ mdutil -i off
 defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -int 0 && \
 killall -HUP bluetoothd
 
+# Disable Wi-Fi
+#*** To Enable Wi-Fi set below command to 'on' ***#
+networksetup -setairportpower airport off
+
 # Save to disk (not to iCloud) by default
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
@@ -66,10 +69,23 @@ defaults write com.apple.NetworkBrowser DisableAirDrop -bool true
 # Minimize windows into their application’s icon
 defaults write com.apple.dock minimize-to-application -bool true
 
+# Prevent Photos from opening automatically when devices are plugged in
+defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 
+# Check for software updates daily, not just once per week
+defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
+# Disable automatic updates to software
+defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool NO
 
-# Safari
+# disable auto app updates
+defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool NO
+
+# Install System data files & security updates
+defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+
+# Now set up security for downloaded apps #
+### Safari Settings ###
 
 # Privacy: don’t send search queries to Apple
 defaults write com.apple.Safari UniversalSearchEnabled -bool false
@@ -92,44 +108,19 @@ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebK
 # Enable “Do Not Track”
 defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 
-
-
-# Check for software updates daily, not just once per week
-defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-
-# Disable automatic updates to software
-defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool NO
-
-# disable auto app updates
-defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool NO
-
-# Install System data files & security updates
-defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
-
-
-
 for app in "Activity Monitor" \
 	"Address Book" \
 	"Calendar" \
 	"cfprefsd" \
 	"Contacts" \
-	"Dock" \
 	"Finder" \
-	"Google Chrome Canary" \
-	"Google Chrome" \
-	"Mail" \
-	"Messages" \
-	"Opera" \
+	# "Google Chrome Canary" \
+	# "Google Chrome" \
 	"Photos" \
 	"Safari" \
 	"SizeUp" \
-	"Spectacle" \
 	"SystemUIServer" \
-	"Terminal" \
-	"Transmission" \
-	"Tweetbot" \
-	"Twitter" \
-	"iCal"; do
+	"Terminal"; do
 	killall "${app}" &> /dev/null
 done
 echo "Done. Note that some of these changes require a logout/restart to take effect."
