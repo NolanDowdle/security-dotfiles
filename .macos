@@ -14,6 +14,9 @@ nvram SystemAudioVolume=" "
 # to add apps to your firewall use the below command: #
 # /usr/libexec/ApplicationFirewall/socketfilterfw --add /path/to/file #
 
+# Enable FireVault Encryption
+sudo fdesetup enable > FileVaultKey.txt
+
 # Enable MacOS Gatekeeper
 spctl --master-enable
 # To add a gatekeeper exception use the command below: #
