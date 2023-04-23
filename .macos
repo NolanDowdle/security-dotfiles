@@ -6,9 +6,6 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
 # Disable the sound effects on boot
 nvram SystemAudioVolume=" "
 
@@ -113,6 +110,33 @@ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebK
 
 # Enable “Do Not Track”
 defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+
+
+# Edit Apps and Installs with Homebrew
+
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install wget
+brew install wget
+
+# Install Firefox
+brew install Firefox
+
+# Install Tor Browser
+brew install --cask tor-browser
+
+# Install AdGuard-VPN
+brew install --cask adguard-vpn
+
+# Install Avast Security Antivirus
+brew install --cask avast-security
+
+# Install Roboform Password Manager
+brew install --cask roboform
+
+# Install OverSight to monitor Mic and Webcam
+brew install --cask oversight
 
 for app in "Activity Monitor" \
 	"Address Book" \
