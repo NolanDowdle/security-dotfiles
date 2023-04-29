@@ -6,9 +6,6 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-# Disable the sound effects on boot
-nvram SystemAudioVolume=" "
-
 # Enable Firewall
 /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 # to add apps to your firewall use the below command: #
@@ -18,48 +15,49 @@ nvram SystemAudioVolume=" "
 sudo fdesetup enable > FileVaultKey.txt
 
 # Enable MacOS Gatekeeper
-spctl --master-enable
+sudo spctl --master-enable
 # To add a gatekeeper exception use the command below: #
 # spctl --add /path/to/Application.app
 
 # Automatic restart on system freeze
-systemsetup -setrestartfreeze on
+sudo systemsetup -setrestartfreeze on
 
 # Enable time machine backup
-tmutil enable
+# tmutil enable
 
 # set default backup change to 2 hours
-defaults write /System/Library/LaunchDaemons/com.apple.backupd-auto StartInterval -int 7200
+defaults write com.apple.backupd-auto StartInterval -int 7200
 
 #### to exclude files from the backup add them here ####
 #### tmutil addexclusion /path/to/file/or/folder ####
 
 # Disable macOS Spotlight search
-mdutil -i off
+sudo mdutil -i off
 
 # Disable bluetooth
-defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -int 0 && \
+# note that this does not update GUI, need to check using terminal if succeeded or not
+defaults write com.apple.Bluetooth ControllerPowerState -int 0 && \
 killall -HUP bluetoothd
 
 # Disable Wi-Fi
 #*** To Enable Wi-Fi set below command to 'on' ***#
-networksetup -setairportpower airport off
+# networksetup -setairportpower airport off
 
 # Save to disk (not to iCloud) by default
-defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+sudo defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 # Enable the “Are you sure you want to open this application?” dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool true
+sudo defaults write com.apple.LaunchServices LSQuarantine -bool true
 
 # Reveal IP address, hostname, OS version, etc. when clicking the clock
 # in the login window
-defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+sudo defaults write com.apple.loginwindow AdminHostInfo HostName
 
 # Sleep the display after 3 minutes
-pmset -a displaysleep 3
+sudo pmset -a displaysleep 3
 
 # Set machine sleep to 3 minutes on battery
-pmset -b sleep 3
+sudo pmset -b sleep 3
 
 # Require password immediately after sleep or screen saver begins
 defaults write com.apple.screensaver askForPassword -int 1
@@ -79,10 +77,11 @@ defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
 # Disable automatic updates to software
-defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool NO
+# defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool NO
+defaults write com.apple.SoftwareUpdate AutomaticDownload -bool NO
 
 # disable auto app updates
-defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool NO
+defaults write com.apple.commerce AutoUpdate -bool NO
 
 # Install System data files & security updates
 defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
@@ -115,16 +114,17 @@ defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 # Edit Apps and Installs with Homebrew
 
 # Install Homebrew
+# /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)'
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install wget
 brew install wget
 
 # Install Firefox
-brew install Firefox
+brew install --force Firefox
 
 # Install Tor Browser
-brew install --cask tor-browser
+brew install --cask --force tor-browser
 
 # Install AdGuard-VPN
 brew install --cask adguard-vpn
@@ -138,19 +138,20 @@ brew install --cask roboform
 # Install OverSight to monitor Mic and Webcam
 brew install --cask oversight
 
+# Disable Wi-Fi
+#*** To Enable Wi-Fi set below command to 'on' ***#
+networksetup -setairportpower airport off
+
+
 for app in "Activity Monitor" \
 	"Address Book" \
 	"Calendar" \
 	"cfprefsd" \
 	"Contacts" \
 	"Finder" \
-	# "Google Chrome Canary" \
-	# "Google Chrome" \
-	"Photos" \
 	"Safari" \
 	"SizeUp" \
-	"SystemUIServer" \
-	"Terminal"; do
+	"SystemUIServer"; do
 	killall "${app}" &> /dev/null
 done
 echo "Done. Note that some of these changes require a logout/restart to take effect."
