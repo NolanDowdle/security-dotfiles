@@ -121,10 +121,10 @@ defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 brew install wget
 
 # Install Firefox
-# brew install Firefox
+brew install --force Firefox
 
 # Install Tor Browser
-# brew install --cask tor-browser
+brew install --cask --force tor-browser
 
 # Install AdGuard-VPN
 brew install --cask adguard-vpn
